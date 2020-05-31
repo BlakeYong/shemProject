@@ -12,7 +12,7 @@ if utilClass.configOption in 'prod':
     shemdb = pw.MySQLDatabase(shem_configs['prod_db_schema'], host=shem_configs['prod_db_host'], port=3306,
                               user=shem_configs['prod_db_user'], passwd=shem_configs['prod_db_passwd'])
 else:
-    shemdb = pw.MySQLDatabase("skyhub", host="dslaba.clickai.ai", port=3306, user="skyhub", passwd="Dd8qDhm2eP!")
+    shemdb = pw.MySQLDatabase("")
 
 class JSONField(pw.TextField):
     def db_value(self, value):

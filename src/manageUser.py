@@ -19,7 +19,7 @@ from models.helper import Helper
 
 class ManageUser:
     def __init__(self):
-        self.dbClass = Helper(init=True)
+        # self.dbClass = Helper(init=True)
         self.invaildUserAuthResponse = {
             "statusCode": 500,
             "error": "Bad Request",
@@ -66,32 +66,33 @@ class ManageUser:
 
         userInfo = {}
 
-        try:
-            userInfo['user'] = self.dbClass.loginUser(userLoginInfo.identifier, userLoginInfo.password).__dict__['__data__']
-        except:
-            pass
+        # try:
+        #     userInfo['user'] = self.dbClass.loginUser(userLoginInfo.identifier, userLoginInfo.password).__dict__['__data__']
+        # except:
+        #     pass
 
-        if userInfo.get('user'):  #db에서 값 받으면
-
-            userInfo['jwt'] = userInfo['user']["token"]
-            if not userInfo['user']["token"]:
-                token = jwt.encode({'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
-                self.dbClass.updateUser(userInfo['user']["id"], {
-                    'token': token
-                })
-                userInfo['jwt'] = token
-
-            if userInfo['user']['confirmed'] and not userInfo['user']['isDeleteRequested']:
-                return HTTP_200_OK, userInfo
-            elif userInfo['user']['isDeleteRequested']:
-                return HTTP_400_BAD_REQUEST, {
-                    "status_code": 400,
-                    "message": "삭제된 회원입니다."
-                }
-            else:
-                return HTTP_400_BAD_REQUEST, {
-                    "status_code": 400,
-                    "message": "Email verification is not confirmed."
-                }
-        else:
-            return HTTP_400_BAD_REQUEST, userInfo
+        # if userInfo.get('user'):  #db에서 값 받으면
+        #
+        #     userInfo['jwt'] = userInfo['user']["token"]
+        #     if not userInfo['user']["token"]:
+        #         token = jwt.encode({'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
+        #         self.dbClass.updateUser(userInfo['user']["id"], {
+        #             'token': token
+        #         })
+        #         userInfo['jwt'] = token
+        #
+        #     if userInfo['user']['confirmed'] and not userInfo['user']['isDeleteRequested']:
+        #         return HTTP_200_OK, userInfo
+        #     elif userInfo['user']['isDeleteRequested']:
+        #         return HTTP_400_BAD_REQUEST, {
+        #             "status_code": 400,
+        #             "message": "삭제된 회원입니다."
+        #         }
+        #     else:
+        #         return HTTP_400_BAD_REQUEST, {
+        #             "status_code": 400,
+        #             "message": "Email verification is not confirmed."
+        #         }
+        return HTTP_200_OK, {"Id":userLoginInfo.identifier,"password":userLoginInfo.password}
+        # else:
+        #     return HTTP_400_BAD_REQUEST, userInfo

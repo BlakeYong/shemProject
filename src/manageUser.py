@@ -71,7 +71,6 @@ class ManageUser:
         except:
             pass
 
-
         if userInfo.get('user'):  #db에서 값 받으면
 
             userInfo['jwt'] = userInfo['user']["token"]

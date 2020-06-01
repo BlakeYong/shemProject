@@ -4,9 +4,9 @@ from routers import airouter
 from starlette.responses import Response
 from starlette.status import HTTP_200_OK
 from pydantic import BaseModel
-from src import manageUser
+# from src import manageUser
 
-app = FastAPI(openapi_url="/api/v1/openapi.json", docs_url="/skyhubdocs", redoc_url=None)
+app = FastAPI(openapi_url="/api/v1/openapi.json", docs_url="/shemdocs", redoc_url=None)
 app.include_router(airouter.router)
 
 @app.get("/")

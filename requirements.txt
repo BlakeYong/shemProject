@@ -5,3 +5,5 @@ peewee
 bcrypt
 jwt
 boto3
+pymysql
+pyjwt

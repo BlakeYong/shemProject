@@ -30,6 +30,7 @@ class ManageUser:
             "error": "Bad Request",
             "message": "유저 정보를 찾을 수 없습니다."
         }
+        self.dbClass = Helper()
 
     def registerUser(self, userInfoRaw):
         userInfo = userInfoRaw.__dict__
@@ -44,10 +45,10 @@ class ManageUser:
 
         userInfo["password"] = bcrypt.hashpw(userInfo["password"].encode(), salt)
         try:
-            # userInfoRaw = self.dbClass.createUser(userInfo) 나중에 db 구축 이후
-            #  userInfo = userInfoRaw.__dict__['__data__'] db 구축후 불러오면 딕셔너리로 변환하기
+            userInfoRaw = self.dbClass.createUser(userInfo) # 나중에 db 구축 이후
+            userInfo = userInfoRaw.__dict__['__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
             userInfo = userInfoRaw
-            # del userInfo["password"]
+            print(userInfo)
         except:
             print(traceback.format_exc())
             return HTTP_400_BAD_REQUEST, {
@@ -56,43 +57,42 @@ class ManageUser:
                 "message": "이미 가입된 이메일입니다."
             }
             pass
-        print(userInfo)
-
-        # self.dbClass.updateUser(userInfo['id'], userInit)
-        # self.utilClass.sendRegistrationEmail(userInfo)
         return HTTP_201_CREATED, userInfo
 
     def loginUser(self, userLoginInfo):
 
         userInfo = {}
+        try:
+            userInfo['user'] = self.dbClass.loginUser(userLoginInfo.identifier, userLoginInfo.password).__dict__['__data__']
+        except:
+            return HTTP_400_BAD_REQUEST, {
+                "status_code": 400,
+                "message": "비밀번호가 일치하지 않습니다."
+            }
+            pass
 
-        # try:
-        #     userInfo['user'] = self.dbClass.loginUser(userLoginInfo.identifier, userLoginInfo.password).__dict__['__data__']
-        # except:
-        #     pass
+        if userInfo.get('user'):  #db에서 값 받으면
 
-        # if userInfo.get('user'):  #db에서 값 받으면
-        #
-        #     userInfo['jwt'] = userInfo['user']["token"]
-        #     if not userInfo['user']["token"]:
-        #         token = jwt.encode({'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
-        #         self.dbClass.updateUser(userInfo['user']["id"], {
-        #             'token': token
-        #         })
-        #         userInfo['jwt'] = token
-        #
-        #     if userInfo['user']['confirmed'] and not userInfo['user']['isDeleteRequested']:
-        #         return HTTP_200_OK, userInfo
-        #     elif userInfo['user']['isDeleteRequested']:
-        #         return HTTP_400_BAD_REQUEST, {
-        #             "status_code": 400,
-        #             "message": "삭제된 회원입니다."
-        #         }
-        #     else:
-        #         return HTTP_400_BAD_REQUEST, {
-        #             "status_code": 400,
-        #             "message": "Email verification is not confirmed."
-        #         }
-        return HTTP_200_OK, {"Id":userLoginInfo.identifier,"password":userLoginInfo.password}
-        # else:
-        #     return HTTP_400_BAD_REQUEST, userInfo
+            userInfo['jwt'] = userInfo['user']["token"]
+            if not userInfo['user']["token"]:
+                token = jwt.encode({'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
+                self.dbClass.updateUser(userInfo['user']["id"], {
+                    'token': token
+                })
+                userInfo['jwt'] = token
+            from pprint import pprint
+            pprint(userInfo)
+
+            # if userInfo['user']['confirmed'] and not userInfo['user']['isDeleteRequested']:
+            #     return HTTP_200_OK, userInfo
+            # elif userInfo['user']['isDeleteRequested']:
+            #     return HTTP_400_BAD_REQUEST, {
+            #         "status_code": 400,
+            #         "message": "삭제된 회원입니다."
+            #     }
+            # else:
+            #     return HTTP_400_BAD_REQUEST, {
+            #         "status_code": 400,
+            #         "message": "Email verification is not confirmed."
+            #     }
+        return HTTP_200_OK, userInfo

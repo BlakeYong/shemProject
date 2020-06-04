@@ -32,6 +32,8 @@ class UserInfo(BaseModel):
     birth: str = None
     gender: str = None
     nickname: str = None
+    address: str = None
+    confirmed: int = 1
 
 @app.post("/register")
 def register(userInfo: UserInfo, response: Response):

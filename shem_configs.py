@@ -1,8 +1,8 @@
 shem_configs = {
-    'prod_db_schema' : '',
-    'prod_db_host': "",
-    'prod_db_user': "",
-    'prod_db_passwd': '',
+    'prod_db_schema' : 'shem',
+    'prod_db_host': "52.78.239.64",
+    'prod_db_user': "shem",
+    'prod_db_passwd': 'shem1234!',
     'access_key': '',
     'secret_key': '',
     'prod_bucket_name':'',

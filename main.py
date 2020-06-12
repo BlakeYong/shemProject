@@ -45,7 +45,7 @@ def register(userInfo: UserInfo, response: Response):
     return result
 
 class UserLoginInfo(BaseModel):
-    identifier: str
+    email: str
     password: str
 
 @app.post("/login/")

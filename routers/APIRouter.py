@@ -6,6 +6,7 @@ from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from src.service.Transcribe import transcribe
 from src.service.Polly import polly
+from pydantic import BaseModel
 from fastapi import FastAPI, File, Header, Form, APIRouter
 
 router = APIRouter()
@@ -23,7 +24,12 @@ def exportVoiceToText(response: Response, file: bytes = File(...), filename: str
             "message": "허용되지 않는 파일 확장자입니다."
         }
 
-@router.post("/exportTextToVoice")
-async def exportTextToVoice(response: Response, text: str = Form(...), language: str = Form(...), apptoken: str = Form(...)):
-    response.code, result = polly.Polly().polly(text,language,apptoken)
+class PollyObject(BaseModel):
+    language : str = "Korean"
+    text : str
+    apptoken : str
+
+@router.post("/predict/polly/")
+async def exportTextToVoice(response: Response, pollyObject : PollyObject):
+    response.code, result = polly.Polly().polly(pollyObject.text, pollyObject.language, pollyObject.apptoken)
     return response.code, result

@@ -17,7 +17,7 @@ from shem_configs import shem_configs
 
 class Polly:
     def __init__(self):
-        self.dbClass = Helper(init=True)
+        self.dbClass = Helper()
 
     def polly(self, Text, language, appToken):
         languages = {
@@ -34,7 +34,7 @@ class Polly:
         #         "statusCode": 503,
         #         "error": "Bad Request",
         #         "message": "허용되지 않은 토큰 값입니다."
-        #     } # 추후 적용
+        #     }
 
         if language not in languages:
             return HTTP_503_SERVICE_UNAVAILABLE, {

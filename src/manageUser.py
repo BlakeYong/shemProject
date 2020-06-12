@@ -19,7 +19,7 @@ from models.helper import Helper
 
 class ManageUser:
     def __init__(self):
-        # self.dbClass = Helper(init=True)
+        self.dbClass = Helper()
         self.invaildUserAuthResponse = {
             "statusCode": 500,
             "error": "Bad Request",
@@ -63,7 +63,7 @@ class ManageUser:
 
         userInfo = {}
         try:
-            userInfo['user'] = self.dbClass.loginUser(userLoginInfo.identifier, userLoginInfo.password).__dict__['__data__']
+            userInfo['user'] = self.dbClass.loginUser(userLoginInfo.email, userLoginInfo.password).__dict__['__data__']
         except:
             return HTTP_400_BAD_REQUEST, {
                 "status_code": 400,

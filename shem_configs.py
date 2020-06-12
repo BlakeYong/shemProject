@@ -6,6 +6,6 @@ shem_configs = {
     'access_key': '',
     'secret_key': '',
     'prod_bucket_name':'',
-    'aws_access_key_id':'AKIA2CFSXMEXUUL63L5C',
-    'aws_secret_access_key':'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'
+    'aws_access_key_id':'AKIATGH4KM5RTAUGB65M',
+    'aws_secret_access_key':'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'
 }

@@ -26,15 +26,14 @@ class Polly:
             "Japanese" : "Mizuki"
         }
 
-        # try:
-        #     user = self.dbClass.getUser(appToken)
-        #     userId = self.utilClass.getStrUserId(user)
-        # except:
-        #     return HTTP_503_SERVICE_UNAVAILABLE, {
-        #         "statusCode": 503,
-        #         "error": "Bad Request",
-        #         "message": "허용되지 않은 토큰 값입니다."
-        #     }
+        try:
+            user = self.dbClass.getUser(appToken)
+        except:
+            return HTTP_503_SERVICE_UNAVAILABLE, {
+                "statusCode": 503,
+                "error": "Bad Request",
+                "message": "허용되지 않은 토큰 값입니다."
+            }
 
         if language not in languages:
             return HTTP_503_SERVICE_UNAVAILABLE, {

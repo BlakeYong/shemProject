@@ -6,10 +6,12 @@ from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from src.service.Transcribe import transcribe
 from src.service.Polly import polly
+from src import manageAI
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Header, Form, APIRouter
 
 router = APIRouter()
+AIstore = manageAI
 
 @router.post("/transcribe")
 def exportVoiceToText(response: Response, file: bytes = File(...), filename: str = Form(...), apptoken: str = Form(...)):
@@ -33,3 +35,7 @@ class PollyObject(BaseModel):
 async def exportTextToVoice(response: Response, pollyObject : PollyObject):
     response.code, result = polly.Polly().polly(pollyObject.text, pollyObject.language, pollyObject.apptoken)
     return response.code, result
+
+@router.post("/preidct/face/")
+def faceDetect(response: Response, file : bytes = File(...), filename : str = Form(...), token: str = Form(...)):
+    response.code, result = AIstore.AiStore().DetectFace(filename, token)

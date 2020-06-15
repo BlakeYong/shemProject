@@ -38,4 +38,5 @@ async def exportTextToVoice(response: Response, pollyObject : PollyObject):
 
 @router.post("/preidct/face/")
 def faceDetect(response: Response, file : bytes = File(...), filename : str = Form(...), token: str = Form(...)):
-    response.code, result = AIstore.AiStore().DetectFace(filename, token)
+    response.code, result = AIstore.AiStore().DetectFace(file, filename, token)
+    return response.code, result

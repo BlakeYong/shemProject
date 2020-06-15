@@ -7,3 +7,4 @@ jwt
 boto3
 pymysql
 pyjwt
+discord_webhook

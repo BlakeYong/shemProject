@@ -13,7 +13,8 @@ import urllib.request
 import json
 import sys
 from boto3 import client
-from shem_configs import shem_configs
+
+
 
 class Polly:
     def __init__(self):
@@ -28,7 +29,9 @@ class Polly:
 
         try:
             user = self.dbClass.getUser(appToken)
+            #userId = self.utilClass.getStrUserId(user)
         except:
+            Util.error_message("polly.py의 앱토큰 검증부분에서 에러가 발생하였습니다.")
             return HTTP_503_SERVICE_UNAVAILABLE, {
                 "statusCode": 503,
                 "error": "Bad Request",
@@ -36,6 +39,7 @@ class Polly:
             }
 
         if language not in languages:
+            Util.error_message("polly.py의 언어코드부분에서 에러가 발생하였습니다.")
             return HTTP_503_SERVICE_UNAVAILABLE, {
                 "statusCode": 503,
                 "error": "Bad Request",
@@ -44,7 +48,7 @@ class Polly:
 
         Polly = client("polly", aws_access_key_id=shem_configs['aws_access_key_id'],
                         aws_secret_access_key=shem_configs['aws_secret_access_key'],
-                                     region_name="ap-northeast-2")
+                                    region_name="ap-northeast-2")
 
         try:
             response = Polly.synthesize_speech(
@@ -62,6 +66,7 @@ class Polly:
                 "message": "변환이 완료되었습니다."
             }
         except:
+            Util.error_message(tracback.format_exc())
             print(traceback.format_exc())
             return HTTP_500_INTERNAL_SERVER_ERROR, {
                 "statusCode": 500,
@@ -69,3 +74,6 @@ class Polly:
                 "message": "잘못된 접근입니다."
             }
             pass
+
+
+    

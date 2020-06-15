@@ -4,6 +4,8 @@ import re
 import uuid
 import datetime
 import jwt
+import peewee
+
 
 from starlette.status import HTTP_200_OK
 from starlette.status import HTTP_201_CREATED
@@ -15,6 +17,7 @@ from starlette.status import HTTP_423_LOCKED
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlette.status import HTTP_507_INSUFFICIENT_STORAGE
 from models.helper import Helper
+
 
 
 class ManageUser:
@@ -43,13 +46,16 @@ class ManageUser:
                 "message": "비밀번호가 양식에 맞지 않습니다. 다시 시도하여 주시길 바랍니다."
             }
 
-        userInfo["password"] = bcrypt.hashpw(userInfo["password"].encode(), salt)
+        userInfo["password"] = bcrypt.hashpw(
+            userInfo["password"].encode(), salt)
         try:
-            userInfoRaw = self.dbClass.createUser(userInfo) # 나중에 db 구축 이후
-            userInfo = userInfoRaw.__dict__['__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
+            userInfoRaw = self.dbClass.createUser(userInfo)  # 나중에 db 구축 이후
+            userInfo = userInfoRaw.__dict__[
+                '__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
             userInfo = userInfoRaw
             print(userInfo)
-        except:
+        except Exception as e:
+            print(e)
             print(traceback.format_exc())
             return HTTP_400_BAD_REQUEST, {
                 "statusCode": 400,
@@ -63,7 +69,8 @@ class ManageUser:
 
         userInfo = {}
         try:
-            userInfo['user'] = self.dbClass.loginUser(userLoginInfo.email, userLoginInfo.password).__dict__['__data__']
+            userInfo['user'] = self.dbClass.loginUser(
+                userLoginInfo.email, userLoginInfo.password).__dict__['__data__']
         except:
             return HTTP_400_BAD_REQUEST, {
                 "status_code": 400,
@@ -71,11 +78,12 @@ class ManageUser:
             }
             pass
 
-        if userInfo.get('user'):  #db에서 값 받으면
+        if userInfo.get('user'):  # db에서 값 받으면
 
             userInfo['jwt'] = userInfo['user']["token"]
             if not userInfo['user']["token"]:
-                token = jwt.encode({'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
+                token = jwt.encode(
+                    {'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
                 self.dbClass.updateUser(userInfo['user']["id"], {
                     'token': token
                 })
@@ -96,3 +104,5 @@ class ManageUser:
             #         "message": "Email verification is not confirmed."
             #     }
         return HTTP_200_OK, userInfo
+
+

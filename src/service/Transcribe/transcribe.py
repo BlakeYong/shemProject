@@ -17,6 +17,7 @@ import json
 from src.util import Util
 from shem_configs import shem_configs
 
+
 class Transcribe:
 
     def __init__(self):
@@ -46,6 +47,7 @@ class Transcribe:
                 Transcribe.start_transcription_job(TranscriptionJobName=job_name, Media={'MediaFileUri': job_uri}, MediaFormat=filename.split('.')[-1], LanguageCode='ko-KR') #ko-KR   en-US
             except:
                 print(traceback.format_exc())
+                Util.error_message(traceback.format_exc())
                 try:
                     Transcribe.delete_transcription_job(TranscriptionJobName=job_name)
                 except:
@@ -67,9 +69,12 @@ class Transcribe:
         except:
             Transcribe.delete_transcription_job(TranscriptionJobName=job_name)
             print(traceback.format_exc())
+            Util.error_message(traceback.format_exc())
             return HTTP_500_INTERNAL_SERVER_ERROR, {
                 "statusCode": 500,
                 "error": "Bad Request",
                 "message": "잘못된 접근입니다."
             }
             pass
+
+

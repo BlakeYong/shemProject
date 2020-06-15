@@ -13,71 +13,67 @@ import urllib.request
 import json
 import sys
 from boto3 import client
-from discord_webhook import DiscordWebhook, DiscordEmbed
-from shem_configs import shem_configs
 
-url = shem_configs['webhook']
 
-try:
-    class Polly:
-        def __init__(self):
-            self.dbClass = Helper()
 
-        def polly(self, Text, language, appToken):
-            languages = {
-                "English" : "Salli",
-                "Korean" : "Seoyeon",
-                "Japanese" : "Mizuki"
+class Polly:
+    def __init__(self):
+        self.dbClass = Helper()
+
+    def polly(self, Text, language, appToken):
+        languages = {
+            "English" : "Salli",
+            "Korean" : "Seoyeon",
+            "Japanese" : "Mizuki"
+        }
+
+        try:
+            user = self.dbClass.getUser(appToken)
+            #userId = self.utilClass.getStrUserId(user)
+        except:
+            Util.error_message("polly.py의 앱토큰 검증부분에서 에러가 발생하였습니다.")
+            return HTTP_503_SERVICE_UNAVAILABLE, {
+                "statusCode": 503,
+                "error": "Bad Request",
+                "message": "허용되지 않은 토큰 값입니다."
             }
 
-            # try:
-            #     user = self.dbClass.getUser(appToken)
-            #     userId = self.utilClass.getStrUserId(user)
-            # except:
-            #     return HTTP_503_SERVICE_UNAVAILABLE, {
-            #         "statusCode": 503,
-            #         "error": "Bad Request",
-            #         "message": "허용되지 않은 토큰 값입니다."
-            #     }
+        if language not in languages:
+            Util.error_message("polly.py의 언어코드부분에서 에러가 발생하였습니다.")
+            return HTTP_503_SERVICE_UNAVAILABLE, {
+                "statusCode": 503,
+                "error": "Bad Request",
+                "message": "지원하지 않는 언어코드입니다."
+            }
 
-            if language not in languages:
-                return HTTP_503_SERVICE_UNAVAILABLE, {
-                    "statusCode": 503,
-                    "error": "Bad Request",
-                    "message": "지원하지 않는 언어코드입니다."
-                }
+        Polly = client("polly", aws_access_key_id=shem_configs['aws_access_key_id'],
+                        aws_secret_access_key=shem_configs['aws_secret_access_key'],
+                                    region_name="ap-northeast-2")
 
-            Polly = client("polly", aws_access_key_id=shem_configs['aws_access_key_id'],
-                            aws_secret_access_key=shem_configs['aws_secret_access_key'],
-                                        region_name="ap-northeast-2")
+        try:
+            response = Polly.synthesize_speech(
+                    Text=Text,
+                    OutputFormat="mp3", VoiceId=languages[language])
 
-            try:
-                response = Polly.synthesize_speech(
-                        Text=Text,
-                        OutputFormat="mp3", VoiceId=languages[language])
+            stream = response.get("AudioStream")
 
-                stream = response.get("AudioStream")
+            with open('test1.mp3', 'wb') as f:
+                data = stream.read()
+                f.write(data)
+            return HTTP_201_CREATED, {
+                "statusCode": 201,
+                "error": "Bad Request",
+                "message": "변환이 완료되었습니다."
+            }
+        except:
+            Util.error_message(tracback.format_exc())
+            print(traceback.format_exc())
+            return HTTP_500_INTERNAL_SERVER_ERROR, {
+                "statusCode": 500,
+                "error": "Bad Request",
+                "message": "잘못된 접근입니다."
+            }
+            pass
 
-                with open('test1.mp3', 'wb') as f:
-                    data = stream.read()
-                    f.write(data)
-                return HTTP_201_CREATED, {
-                    "statusCode": 201,
-                    "error": "Bad Request",
-                    "message": "변환이 완료되었습니다."
-                }
-            except:
-                print(traceback.format_exc())
-                return HTTP_500_INTERNAL_SERVER_ERROR, {
-                    "statusCode": 500,
-                    "error": "Bad Request",
-                    "message": "잘못된 접근입니다."
-                }
-                pass
 
-except Exception as e:
-    print(e)
-    webhook = DiscordWebhook(url=url)
-    embed = DiscordEmbed(title="polly.py", description=str(e), color=242424)
-    webhook.add_embed(embed)
-    response = webhook.execute()
+    

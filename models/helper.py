@@ -21,6 +21,12 @@ class Helper():
                 return func(self, *args, **kwargs)
         return wrap
 
+    @wrapper
+    def getUser(self, token, raw=False):
+        return usersTable.get(usersTable.token == token).__dict__['__data__'] if not raw else usersTable.get(
+            usersTable.token == token)
+
+    @wrapper
     def loginUser(self, identifier, password):
         user = usersTable.get(usersTable.email == identifier)
         if bcrypt.checkpw(password.encode(), user.password.encode()):

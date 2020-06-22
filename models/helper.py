@@ -4,6 +4,7 @@ import bcrypt
 import peewee
 
 from models.helperCreate import HelperCreate
+from models.helperSensor import HelperSensor
 from models import *
 import functools
 
@@ -36,10 +37,9 @@ class Helper():
 
     @wrapper
     def updateUser(self, rowId, data):
-
         return usersTable.update(**data).where(usersTable.id == rowId).execute()
 
-for helperClass in [HelperCreate]:
+for helperClass in [HelperCreate, HelperSensor]:
     methodList = [func for func in dir(helperClass) if callable(getattr(helperClass, func)) and '__' not in func]
     for i, methodRaw in enumerate(methodList):
         setattr(Helper, methodRaw, classmethod(getattr(helperClass, methodRaw)))

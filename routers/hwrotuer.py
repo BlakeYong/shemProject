@@ -22,3 +22,15 @@ class DigitalObject(BaseModel):
 def digitalPin(response: Response, digitalObject : DigitalObject):
     response.code, result = Hardware.Hardware().digital(digitalObject.hardwareId, digitalObject.status)
     return response.code, result
+
+class AnalogObject(BaseModel):
+    value : float
+
+@router.post("/analog/")
+def analogPin(response: Response, analogObject : AnalogObject):
+    response.code, result = Hardware.Hardware().analog(analogObject.value)
+    return response.code, result
+
+@router.post("/analogposttest")
+def analogTest(response: Response):
+    response.code, result = Hardware.Hardware().analogTest()

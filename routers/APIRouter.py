@@ -33,10 +33,10 @@ class PollyObject(BaseModel):
 
 @router.post("/predict/polly/")
 async def exportTextToVoice(response: Response, pollyObject : PollyObject):
-    response.code, result = polly.Polly().polly(pollyObject.text, pollyObject.language, pollyObject.apptoken)
-    return response.code, result
+    response.status_code, result = polly.Polly().polly(pollyObject.text, pollyObject.language, pollyObject.apptoken)
+    return result
 
 @router.post("/preidct/face/")
 def faceDetect(response: Response, file : bytes = File(...), filename : str = Form(...), token: str = Form(...)):
-    response.code, result = AIstore.AiStore().DetectFace(file, filename, token)
-    return response.code, result
+    response.status_code, result = AIstore.AiStore().DetectFace(file, filename, token)
+    return result

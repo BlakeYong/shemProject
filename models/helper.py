@@ -4,6 +4,7 @@ import bcrypt
 import peewee
 
 from models.helperCreate import HelperCreate
+from models.helperSensor import HelperSensor
 from models import *
 import functools
 
@@ -21,6 +22,12 @@ class Helper():
                 return func(self, *args, **kwargs)
         return wrap
 
+    @wrapper
+    def getUser(self, token, raw=False):
+        return usersTable.get(usersTable.token == token).__dict__['__data__'] if not raw else usersTable.get(
+            usersTable.token == token)
+
+    @wrapper
     def loginUser(self, identifier, password):
         user = usersTable.get(usersTable.email == identifier)
         if bcrypt.checkpw(password.encode(), user.password.encode()):
@@ -30,10 +37,9 @@ class Helper():
 
     @wrapper
     def updateUser(self, rowId, data):
-
         return usersTable.update(**data).where(usersTable.id == rowId).execute()
 
-for helperClass in [HelperCreate]:
+for helperClass in [HelperCreate, HelperSensor]:
     methodList = [func for func in dir(helperClass) if callable(getattr(helperClass, func)) and '__' not in func]
     for i, methodRaw in enumerate(methodList):
         setattr(Helper, methodRaw, classmethod(getattr(helperClass, methodRaw)))

@@ -5,12 +5,13 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
 from starlette.status import HTTP_200_OK
 from pydantic import BaseModel
-from routers import airouter, APIRouter
+from routers import airouter, APIRouter, hwrotuer
 from src import manageUser
 
 app = FastAPI(openapi_url="/api/v1/openapi.json", docs_url="/shemdocs", redoc_url=None)
 app.include_router(airouter.router)
 app.include_router(APIRouter.router)
+app.include_router(hwrotuer.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,7 +36,7 @@ class UserInfo(BaseModel):
     address: str = None
     confirmed: int = 1
 
-@app.post("/register")
+@app.post("/register/")
 def register(userInfo: UserInfo, response: Response):
     if userInfo.birth:
         userInfo.birth = datetime.datetime.strptime(userInfo.birth, "%Y-%m-%d")

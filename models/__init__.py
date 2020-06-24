@@ -24,6 +24,13 @@ class MySQLModel(pw.Model):
     class Meta:
         database = shemdb
 
+class hardwareTest(MySQLModel):
+    class Meta:
+        db_table = 'hardwareTest'
+
+    id = pw.IntegerField()
+    value = pw.FloatField()
+
 class usersTable(MySQLModel):
     class Meta:
         db_table = 'usersTable'

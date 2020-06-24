@@ -8,3 +8,4 @@ boto3
 pymysql
 pyjwt
 discord_webhook
+python-multipart

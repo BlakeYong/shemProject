@@ -24,12 +24,22 @@ class MySQLModel(pw.Model):
     class Meta:
         database = shemdb
 
-class hardwareTest(MySQLModel):
+class hardwareTable(MySQLModel):
     class Meta:
-        db_table = 'hardwareTest'
-
+        db_table = 'hardwareTable'
     id = pw.IntegerField()
     value = pw.FloatField()
+
+class houseTable(MySQLModel):
+    class Meta:
+        db_table = 'houseTable'
+    
+    id = pw.IntegerField()
+    #isTrip = pw.BooleanField(default=False) # 여행모드 켰는가?
+    #tripFrom = pw.DateTimeField() # 여행 모드 시작 날짜
+    #tripTo = pw.DateTimeField() # 여행 모드 끝날 날짜
+    created_at = pw.DateTimeField()
+    updated_at = pw.DateTimeField()
 
 class usersTable(MySQLModel):
     class Meta:
@@ -63,3 +73,22 @@ class usersTable(MySQLModel):
     appTokenCodeUpdatedAt = pw.DateTimeField()
     address = pw.CharField()
     isDeleteRequested = pw.IntegerField
+
+class linkedHouseAndHardware(MySQLModel):
+    class Meta:
+        db_table = 'linkedHouseAndHardware'
+    id = pw.IntegerField()
+    houseId = pw.ForeignKeyField(houseTable, to_field='id')
+    hardwareId = pw.ForeignKeyField(hardwareTable, to_field='id')
+    created_at = pw.DateTimeField()
+    updated_at = pw.DateTimeField()
+
+# user, house 의 id를 연결하는 관계 테이블
+class linkedUserAndHouse(MySQLModel):
+    class Meta:
+        db_table = 'linkedUserAndHouse'
+    id = pw.IntegerField()
+    houseId = pw.ForeignKeyField(houseTable, to_field='id')
+    userId = pw.ForeignKeyField(usersTable, to_field='id')
+    created_at = pw.DateTimeField()
+    updated_at = pw.DateTimeField()

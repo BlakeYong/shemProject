@@ -26,4 +26,4 @@ class HelperSensor():
     @wrapper
     def analogTestInput(self, data):
         print("hello")
-        return hardwareTest.insert(value=data).execute()
+        return hardwareTable.insert(value=data).execute()

@@ -17,12 +17,14 @@ from starlette.status import HTTP_403_FORBIDDEN
 from starlette.status import HTTP_423_LOCKED
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlette.status import HTTP_507_INSUFFICIENT_STORAGE
-from models.helper import Helper
+from models.helper import *
 
-
+from util import Util
 
 class ManageUser:
-    def __init__(self):
+    def __init__(self): 
+        Util.createTables(usersTable) # 테이블 자동생성
+        
         self.dbClass = Helper()
         self.invaildUserAuthResponse = {
             "statusCode": 500,
@@ -68,7 +70,8 @@ class ManageUser:
             return HTTP_400_BAD_REQUEST, {
                 "statusCode": 400,
                 "error": "Bad Request",
-                "message": "이미 가입된 이메일입니다."
+                "message" : "DB 설정 오류 또는 이미 가입된 이메일 입니다"
+                #"message": "이미 가입된 이메일입니다."
             }
             pass
         return HTTP_201_CREATED, userInfo

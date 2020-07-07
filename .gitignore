@@ -8,3 +8,4 @@ src/manageAI.py
 /shemAmazon.csv
 /shemPolly.csv
 shemenv
+.vscode

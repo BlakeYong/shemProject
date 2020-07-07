@@ -5,6 +5,7 @@ import uuid
 import datetime
 import jwt
 import peewee
+import pymysql
 
 
 from starlette.status import HTTP_200_OK
@@ -61,8 +62,8 @@ class ManageUser:
                 '__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
             userInfo = userInfoRaw
             print(userInfo)
-        except Exception as e:
-            print(e)
+            print(userInfoRaw)
+        except:
             print(traceback.format_exc())
             return HTTP_400_BAD_REQUEST, {
                 "statusCode": 400,

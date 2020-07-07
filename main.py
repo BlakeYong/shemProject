@@ -36,7 +36,7 @@ class UserInfo(BaseModel):
     address: str = None
     confirmed: int = 1
 
-@app.post("/register")
+@app.post("/register/")
 def register(userInfo: UserInfo, response: Response):
     if userInfo.birth:
         userInfo.birth = datetime.datetime.strptime(userInfo.birth, "%Y-%m-%d")

@@ -24,15 +24,15 @@ class MySQLModel(pw.Model):
     class Meta:
         database = shemdb
 
-class hardwareTable(MySQLModel):
+class HardwareTable(MySQLModel):
     class Meta:
-        db_table = 'hardwareTable'
+        db_table = 'HardwareTable'
     id = pw.IntegerField()
     value = pw.FloatField()
 
-class houseTable(MySQLModel):
+class HouseTable(MySQLModel):
     class Meta:
-        db_table = 'houseTable'
+        db_table = 'HouseTable'
     
     id = pw.IntegerField()
     isTrip = pw.BooleanField(default=False) # 여행모드 켰는가?
@@ -41,9 +41,9 @@ class houseTable(MySQLModel):
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
 
-class usersTable(MySQLModel):
+class UsersTable(MySQLModel):
     class Meta:
-        db_table = 'usersTable'
+        db_table = 'UsersTable'
 
     id = pw.IntegerField()
     username = pw.CharField()
@@ -75,21 +75,21 @@ class usersTable(MySQLModel):
     isDeleteRequested = pw.IntegerField
 
 
-class linkedHouseAndHardware(MySQLModel):
+class LinkedHouseAndHardware(MySQLModel):
     class Meta:
-        db_table = 'linkedHouseAndHardware'
+        db_table = 'LinkedHouseAndHardware'
     id = pw.IntegerField()
-    houseId = pw.ForeignKeyField(houseTable, to_field='id')
-    hardwareId = pw.ForeignKeyField(hardwareTable, to_field='id')
+    houseId = pw.ForeignKeyField(HouseTable, to_field='id')
+    hardwareId = pw.ForeignKeyField(HardwareTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
 
 # user, house 의 id를 연결하는 관계 테이블
-class linkedUserAndHouse(MySQLModel):
+class LinkedUserAndHouse(MySQLModel):
     class Meta:
-        db_table = 'linkedUserAndHouse'
+        db_table = 'LinkedUserAndHouse'
     id = pw.IntegerField()
-    houseId = pw.ForeignKeyField(houseTable, to_field='id')
-    userId = pw.ForeignKeyField(usersTable, to_field='id')
+    houseId = pw.ForeignKeyField(HouseTable, to_field='id')
+    userId = pw.ForeignKeyField(UsersTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()

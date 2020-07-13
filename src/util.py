@@ -8,8 +8,8 @@ class Util:
         utill = None
     
     def createTables(table):
-    if not table.table_exists(): # 테이블 자동생성
-        table.create_table()
+        if not table.table_exists(): # 테이블 자동생성
+            table.create_table()
 
     
     def error_message(self,text) :

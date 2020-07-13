@@ -6,15 +6,19 @@ from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from src.service.Transcribe import transcribe
 from src.service.Polly import polly
-#from src import manageAI
+from src import manageAI
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Header, Form, APIRouter
 from shem_configs import shem_configs
 import requests
 import xml.etree.ElementTree as ET
+from urllib.parse import quote
+import json
+import urllib
+import ssl
 
 router = APIRouter()
-#AIstore = manageAI
+AIstore = manageAI
 
 @router.post("/transcribe")
 def exportVoiceToText(response: Response, file: bytes = File(...), filename: str = Form(...), apptoken: str = Form(...)):
@@ -44,23 +48,32 @@ def faceDetect(response: Response, file : bytes = File(...), filename : str = Fo
     response.status_code, result = AIstore.AiStore().DetectFace(file, filename, token)
     return result
 
-class Location(BaseModel):
-    x : float
-    y : float
+class PointObject(BaseModel):
+    origin : str
+    destination : str
 
-@router.post("/busapi/station")
-async def nearbyStation(location : Location):
-    url = "{0}?serviceKey={1}&x={2}&y={3}&".format(shem_configs["bus_url"],shem_configs["bus_key"],location.x,location.y)
-    r = requests.get(url)
-    root = ET.fromstring(r.text)
-    idx  = []
-    name =[]
+@router.post("/directions")
+def directions(pointObject : PointObject):
 
-    for stationId in root.iter('stationId'):
-        idx.append(stationId.text)
-    for stationName in root.iter('stationName'):
-        name.append(stationName.text)
+    origin_url = quote(pointObject.origin)
+    destination_url = quote(pointObject.destination)
 
-    result = {"idx":idx,"name":name}
-    return result
+    url = "{0}origin={1}&destination={2}&mode=transit&departure_time=now&key={3}".format(shem_configs["google_maps_url"],origin_url,destination_url,shem_configs['google_maps_key'])
+    
+    request         = urllib.request.Request(url)
+    context         = ssl._create_unverified_context()
+    response        = urllib.request.urlopen(request, context=context)
+    responseText    = response.read().decode('utf-8')
+    responseJson    = json.loads(responseText)
 
+    wholeDict = dict(responseJson)
+
+    path = wholeDict["routes"][0]["legs"][0]
+    steps = path["steps"]
+    
+    result = ""
+
+    for step in steps:
+        result += step['html_instructions'] + ". "
+
+    return {"result":result}

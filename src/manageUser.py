@@ -18,7 +18,7 @@ from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlette.status import HTTP_507_INSUFFICIENT_STORAGE
 from models.helper import *
 
-from util import Util
+from src.util import Util
 
 class ManageUser:
     def __init__(self): 

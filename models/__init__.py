@@ -35,9 +35,9 @@ class houseTable(MySQLModel):
         db_table = 'houseTable'
     
     id = pw.IntegerField()
-    #isTrip = pw.BooleanField(default=False) # 여행모드 켰는가?
-    #tripFrom = pw.DateTimeField() # 여행 모드 시작 날짜
-    #tripTo = pw.DateTimeField() # 여행 모드 끝날 날짜
+    isTrip = pw.BooleanField(default=False) # 여행모드 켰는가?
+    tripFrom = pw.DateTimeField() # 여행 모드 시작 날짜
+    tripTo = pw.DateTimeField() # 여행 모드 끝날 날짜
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
 
@@ -73,6 +73,7 @@ class usersTable(MySQLModel):
     appTokenCodeUpdatedAt = pw.DateTimeField()
     address = pw.CharField()
     isDeleteRequested = pw.IntegerField
+
 
 class linkedHouseAndHardware(MySQLModel):
     class Meta:

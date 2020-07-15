@@ -9,3 +9,4 @@ pymysql
 pyjwt
 discord_webhook
 python-multipart
+googletrans

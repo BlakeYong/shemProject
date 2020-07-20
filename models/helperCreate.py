@@ -25,4 +25,4 @@ class HelperCreate():
 
     @wrapper
     def createUser(self, data):
-        return usersTable.create(**(data))
+        return UsersTable.create(**(data))

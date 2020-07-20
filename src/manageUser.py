@@ -22,7 +22,7 @@ from src.util import Util
 
 class ManageUser:
     def __init__(self): 
-        Util.createTables(usersTable) # 테이블 자동생성
+        Util.createTables(UsersTable) # 테이블 자동생성
         
         self.dbClass = Helper()
         self.invaildUserAuthResponse = {

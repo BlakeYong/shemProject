@@ -1,4 +1,4 @@
-from discord_webhook import DiscordWebhook, DiscordEmbed
+#from discord_webhook import DiscordWebhook, DiscordEmbed
 from shem_configs import shem_configs
 
 url = shem_configs['webhook']

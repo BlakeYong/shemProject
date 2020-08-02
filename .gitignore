@@ -10,3 +10,4 @@ src/manageAI.py
 shemenv
 .vscode
 venv3
+python3.8

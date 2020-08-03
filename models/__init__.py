@@ -24,11 +24,34 @@ class MySQLModel(pw.Model):
     class Meta:
         database = shemdb
 
-class hardwareTable(MySQLModel):
+class HardwareTable(MySQLModel):
     class Meta:
         db_table = 'hardwareTable'
     id = pw.IntegerField()
+    userId = pw.IntegerField()
+    hardwareId = pw.IntegerField()
     value = pw.FloatField()
+    createDateTime = pw.DateTimeField()
+
+class ChildrenHardwareTable(MySQLModel):
+
+    class Meta:
+        db_table = 'childrenHardwareInfo'
+    id = pw.IntegerField()
+    hardwareName = pw.CharField()
+    parentsHardwareId = pw.IntegerField()
+    userId = pw.IntegerField()
+    createDateTime = pw.DateTimeField()
+
+class ParentsHardwareTable(MySQLModel):
+
+    class Meta:
+        db_table = 'parentsTable'
+    id = pw.IntegerField()
+    hardwareName = pw.CharField()
+    childrenId = pw.CharField()
+    userId = pw.IntegerField()
+    createDateTime = pw.DateTimeField()
 
 class houseTable(MySQLModel):
     class Meta:
@@ -67,7 +90,7 @@ class linkedHouseAndHardware(MySQLModel):
         db_table = 'linkedHouseAndHardware'
     id = pw.IntegerField()
     houseId = pw.ForeignKeyField(houseTable, to_field='id')
-    hardwareId = pw.ForeignKeyField(hardwareTable, to_field='id')
+    hardwareId = pw.ForeignKeyField(HardwareTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
 
@@ -77,6 +100,6 @@ class linkedUserAndHouse(MySQLModel):
         db_table = 'linkedUserAndHouse'
     id = pw.IntegerField()
     houseId = pw.ForeignKeyField(houseTable, to_field='id')
-    userId = pw.ForeignKeyField(usersTable, to_field='id')
+    userId = pw.ForeignKeyField(UsersTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()

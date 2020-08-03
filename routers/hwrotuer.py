@@ -31,7 +31,14 @@ def analogPin(response: Response, analogObject : AnalogObject):
     response.status_code, result = Hardware.Hardware().analog(analogObject.value)
     return result
 
-@router.post("/analogposttest")
-def analogTest(response: Response):
-    response.status_code, result = Hardware.Hardware().analogTest()
+class ParentsHardwareInfo(BaseModel):
+    hardwareName : str
+    token : str
+
+
+@router.post("/registerparents/")
+def registerParentsHw(response: Response, parentsHardwareInfo : ParentsHardwareInfo):
+
+    response.status_code, result = Hardware.Hardware().registerParents(parentsHardwareInfo)
+
     return result

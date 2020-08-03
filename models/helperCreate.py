@@ -25,4 +25,8 @@ class HelperCreate():
 
     @wrapper
     def createUser(self, data):
-        return usersTable.create(**(data))
+        return UsersTable.create(**(data))
+
+    @wrapper
+    def createParentsHardware(self, data):
+        return ParentsHardwareTable.create(**(data))

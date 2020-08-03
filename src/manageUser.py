@@ -22,8 +22,7 @@ from models.helper import *
 from src.util import Util
 
 class ManageUser:
-    def __init__(self): 
-        Util.createTables(usersTable) # 테이블 자동생성
+    def __init__(self):
         
         self.dbClass = Helper()
         self.invaildUserAuthResponse = {
@@ -60,11 +59,7 @@ class ManageUser:
             userInfo["password"].encode(), salt)
         try:
             userInfoRaw = self.dbClass.createUser(userInfo)  # 나중에 db 구축 이후
-            userInfo = userInfoRaw.__dict__[
-                '__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
-            userInfo = userInfoRaw
-            print(userInfo)
-            print(userInfoRaw)
+            userInfo = userInfoRaw.__dict__['__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
         except:
             print(traceback.format_exc())
             return HTTP_400_BAD_REQUEST, {

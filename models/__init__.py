@@ -41,38 +41,25 @@ class houseTable(MySQLModel):
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
 
-class usersTable(MySQLModel):
+class UsersTable(MySQLModel):
     class Meta:
         db_table = 'usersTable'
 
     id = pw.IntegerField()
     username = pw.CharField()
     email = pw.CharField()
-    nickname = pw.CharField()
     password = pw.CharField()
     resetPasswordToken = pw.CharField()
     confirmed = pw.IntegerField()
-    name = pw.CharField()
-    resetPasswordRequestDatetime = pw.DateTimeField()
-    resetPasswordVerifyLink = pw.CharField()
-    resetPasswordVerifyTokenID = pw.CharField()
-    emailVerifyRequestDatetime = pw.CharField()
-    emailVerifyDatetime = pw.CharField()
-    emailVerifyTokenID = pw.CharField()
-    emailVerifyLink = pw.CharField()
-    emailChangeValue = pw.CharField()
-    emailChangeRequestDatetime = pw.CharField()
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
-    emailVerifiedYN = pw.CharField()
-    emailTokenCode = pw.CharField()
     token = pw.TextField()
     gender = pw.CharField()
     birth = pw.DateField
     appTokenCode = pw.CharField()
     appTokenCodeUpdatedAt = pw.DateTimeField()
     address = pw.CharField()
-    isDeleteRequested = pw.IntegerField
+    isDeleteRequested = pw.BooleanField()
 
 
 class linkedHouseAndHardware(MySQLModel):

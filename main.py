@@ -7,7 +7,6 @@ from starlette.status import HTTP_200_OK
 from pydantic import BaseModel
 from routers import airouter, APIRouter, hwrotuer, tripModeRouter
 from src import manageUser
-from models import usersTable
 
 app = FastAPI(openapi_url="/api/v1/openapi.json", docs_url="/shemdocs", redoc_url=None)
 app.include_router(airouter.router)
@@ -42,8 +41,7 @@ def register(userInfo: UserInfo, response: Response):
         userInfo.birth = datetime.datetime.strptime(userInfo.birth, "%Y-%m-%d")
 
     response.status_code, result = manageUser.ManageUser().registerUser(userInfo)
-    
-    usersTable._meta.auto_increment = True
+
     return result
 
 class UserLoginInfo(BaseModel):

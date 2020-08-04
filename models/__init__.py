@@ -82,7 +82,7 @@ class UsersTable(MySQLModel):
     appTokenCode = pw.CharField()
     appTokenCodeUpdatedAt = pw.DateTimeField()
     address = pw.CharField()
-    isDeleteRequested = pw.BooleanField()
+    isDelete = pw.BooleanField()
 
 
 class linkedHouseAndHardware(MySQLModel):

@@ -6,19 +6,16 @@ from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from src.service.Transcribe import transcribe
 from src.service.Polly import polly
-from src import manageAI
+from src import manageAI, manageDirection
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Header, Form, APIRouter
 from shem_configs import shem_configs
 import requests
 import xml.etree.ElementTree as ET
-from urllib.parse import quote
-import json
-import urllib
-import ssl
 
 router = APIRouter()
 AIstore = manageAI
+Direction = manageDirection
 
 @router.post("/transcribe")
 def exportVoiceToText(response: Response, file: bytes = File(...), filename: str = Form(...), apptoken: str = Form(...)):
@@ -53,27 +50,7 @@ class PointObject(BaseModel):
     destination : str
 
 @router.post("/directions")
-def directions(pointObject : PointObject):
-
-    origin_url = quote(pointObject.origin)
-    destination_url = quote(pointObject.destination)
-
-    url = "{0}origin={1}&destination={2}&mode=transit&departure_time=now&key={3}".format(shem_configs["google_maps_url"],origin_url,destination_url,shem_configs['google_maps_key'])
+def directions(response: Response,pointObject : PointObject):
+    result = Direction.ManageDirection().find_direction(pointObject.origin,pointObject.destination)
+    return result
     
-    request         = urllib.request.Request(url)
-    context         = ssl._create_unverified_context()
-    response        = urllib.request.urlopen(request, context=context)
-    responseText    = response.read().decode('utf-8')
-    responseJson    = json.loads(responseText)
-
-    wholeDict = dict(responseJson)
-
-    path = wholeDict["routes"][0]["legs"][0]
-    steps = path["steps"]
-    
-    result = ""
-
-    for step in steps:
-        result += step['html_instructions'] + ". "
-
-    return {"result":result}

@@ -47,7 +47,7 @@ class ManageUser:
                 "error": "Bad Request",
                 "message": "비밀번호가 양식에 맞지 않습니다. 다시 시도하여 주시길 바랍니다."
             }
-
+ 
         if len(re.findall("[a-z]", userInfo["password"])) == 0 or len(re.findall("[0-9]", userInfo["password"])) == 0 or len(re.findall("[!@#$%^&+=]",userInfo["password"])) == 0:
             return HTTP_500_INTERNAL_SERVER_ERROR, {
                 "statusCode": 500,
@@ -94,6 +94,7 @@ class ManageUser:
                     'token': token
                 })
                 userInfo['jwt'] = token
+                userInfo['user']["token"] = token
             from pprint import pprint
             pprint(userInfo)
 

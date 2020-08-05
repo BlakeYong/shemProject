@@ -37,7 +37,7 @@ class Helper():
 
     @wrapper
     def updateUser(self, rowId, data):
-        return usersTable.update(**data).where(usersTable.id == rowId).execute()
+        return UsersTable.update(**data).where(UsersTable.id == rowId).execute()
 
 for helperClass in [HelperCreate, HelperSensor]:
     methodList = [func for func in dir(helperClass) if callable(getattr(helperClass, func)) and '__' not in func]

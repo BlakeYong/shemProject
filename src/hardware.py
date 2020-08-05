@@ -39,20 +39,11 @@ class Hardware:
 
         return req.status_code, req.text
 
-    def registerParents(self, parentsHardwareInfo):
+    def registerParents(self, hardwareName, token):
 
-        hardwareInfo = parentsHardwareInfo.__dict__
+        user = self.dbClass.getUser(token, False)
 
-        try:
-            user = self.dbClass.getUser(hardwareInfo['token'], False)
-        except:
-            return HTTP_400_BAD_REQUEST,{
-                "errorCode" : 400,
-                "message" : "잘못된 사용자 입니다."
-            }
-
-        hardwareInfo['userId'] = user['id']
-        hardwareInfo['childrenId'] = []
+        hardwareInfo = {'hardwareName': hardwareName, 'userId' : user['id'], 'childrenId' : []}
 
         self.dbClass.createParentsHardware(hardwareInfo)
 

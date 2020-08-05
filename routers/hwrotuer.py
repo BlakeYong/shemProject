@@ -1,17 +1,18 @@
 from starlette.responses import Response
-from pydantic import BaseModel
-from starlette.responses import Response
-from starlette.status import HTTP_200_OK
-from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
-from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
-from src.service.Transcribe import transcribe
-from src.service.Polly import polly
 from src import hardware
 from pydantic import BaseModel
-from fastapi import FastAPI, File, Header, Form, APIRouter
+from fastapi import Form, APIRouter, HTTPException, Depends
+from models.helper import Helper
 
+dbClass = Helper()
 router = APIRouter()
 Hardware = hardware
+
+async def checkToken(token: str = Form(...)):
+    try:
+        user = dbClass.getUser(token)
+    except:
+        raise HTTPException(status_code=503, detail="허용되지 않은 토큰 값입니다.")
 
 
 class DigitalObject(BaseModel):
@@ -31,14 +32,9 @@ def analogPin(response: Response, analogObject : AnalogObject):
     response.status_code, result = Hardware.Hardware().analog(analogObject.value)
     return result
 
-class ParentsHardwareInfo(BaseModel):
-    hardwareName : str
-    token : str
+@router.post("/registerparents/", dependencies=[Depends(checkToken)])
+def registerParentsHw(response: Response, hardwareName : str = Form(...), token : str = Form(...)):
 
-
-@router.post("/registerparents/")
-def registerParentsHw(response: Response, parentsHardwareInfo : ParentsHardwareInfo):
-
-    response.status_code, result = Hardware.Hardware().registerParents(parentsHardwareInfo)
+    response.status_code, result = Hardware.Hardware().registerParents(hardwareName, token)
 
     return result

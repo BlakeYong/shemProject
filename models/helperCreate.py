@@ -30,3 +30,7 @@ class HelperCreate():
     @wrapper
     def createParentsHardware(self, data):
         return ParentsHardwareTable.create(**(data))
+
+    @wrapper
+    def createChildrenHardware(self, data):
+        return ChildrenHardwareTable.create(**(data))

@@ -32,9 +32,16 @@ def analogPin(response: Response, analogObject : AnalogObject):
     response.status_code, result = Hardware.Hardware().analog(analogObject.value)
     return result
 
-@router.post("/registerparents/", dependencies=[Depends(checkToken)])
+@router.post("/registerParents/", dependencies=[Depends(checkToken)])
 def registerParentsHw(response: Response, hardwareName : str = Form(...), token : str = Form(...)):
 
     response.status_code, result = Hardware.Hardware().registerParents(hardwareName, token)
+
+    return result
+
+@router.post("/registerChildren/", dependencies=[Depends(checkToken)])
+def registerParentsHw(response: Response, hardwareName : str = Form(...), parentsId : int = Form(...), token : str = Form(...)):
+
+    response.status_code, result = Hardware.Hardware().registerChildren(hardwareName, parentsId, token)
 
     return result

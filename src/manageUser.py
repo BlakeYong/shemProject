@@ -69,6 +69,7 @@ class ManageUser:
                 #"message": "이미 가입된 이메일입니다."
             }
             pass
+        utilClass.send_message()
         return HTTP_201_CREATED, userInfo
 
     def loginUser(self, userLoginInfo):
@@ -95,8 +96,6 @@ class ManageUser:
                 })
                 userInfo['jwt'] = token
                 userInfo['user']["token"] = token
-            from pprint import pprint
-            pprint(userInfo)
 
             # if userInfo['user']['confirmed'] and not userInfo['user']['isDeleteRequested']:
             #     return HTTP_200_OK, userInfo
@@ -110,6 +109,7 @@ class ManageUser:
             #         "status_code": 400,
             #         "message": "Email verification is not confirmed."
             #     }
+            utilClass.send_message(f"로그인 유저 정보\n===============\nid : {userInfo['user']['id']} | email : {userInfo['user']['email']} | username : {userInfo['user']['username']}\n===============", "log")
         return HTTP_200_OK, userInfo
 
 

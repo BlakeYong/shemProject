@@ -2,7 +2,7 @@ from urllib.parse import quote
 import urllib
 import ssl
 import json
-from googletrans import Translator
+# from googletrans import Translator
 from src.util import Util
 from shem_configs import shem_configs
 

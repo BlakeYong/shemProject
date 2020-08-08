@@ -24,6 +24,5 @@ class HelperSensor():
         return wrap
 
     @wrapper
-    def analogTestInput(self, data):
-        print("hello")
-        return HardwareTable.insert(value=data).execute()
+    def getParentsHardwareById(self, hardwareId):
+        return ParentsHardwareTable.get(ParentsHardwareTable.id == hardwareId)

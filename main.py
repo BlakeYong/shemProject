@@ -31,12 +31,10 @@ def getRoot(response: Response):
 class UserInfo(BaseModel):
     email: str
     password: str
-    name: str = None
+    username: str = None
     birth: str = None
     gender: str = None
-    nickname: str = None
     address: str = None
-    confirmed: int = 1
 
 @app.post("/register/")
 def register(userInfo: UserInfo, response: Response):
@@ -44,8 +42,12 @@ def register(userInfo: UserInfo, response: Response):
         userInfo.birth = datetime.datetime.strptime(userInfo.birth, "%Y-%m-%d")
 
     response.status_code, result = manageUser.ManageUser().registerUser(userInfo)
+<<<<<<< HEAD
     
     UsersTable._meta.auto_increment = True
+=======
+
+>>>>>>> 6ba9e87736c92b823e2f1032596484e39d1494d2
     return result
 
 class UserLoginInfo(BaseModel):

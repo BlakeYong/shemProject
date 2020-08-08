@@ -31,7 +31,7 @@ class Polly:
             user = self.dbClass.getUser(appToken)
             #userId = self.utilClass.getStrUserId(user)
         except:
-            Util.error_message("polly.py의 앱토큰 검증부분에서 에러가 발생하였습니다.")
+            Util.send_message("polly.py의 앱토큰 검증부분에서 에러가 발생하였습니다.")
             return HTTP_503_SERVICE_UNAVAILABLE, {
                 "statusCode": 503,
                 "error": "Bad Request",
@@ -39,7 +39,7 @@ class Polly:
             }
 
         if language not in languages:
-            Util.error_message("polly.py의 언어코드부분에서 에러가 발생하였습니다.")
+            Util.send_message("polly.py의 언어코드부분에서 에러가 발생하였습니다.")
             return HTTP_503_SERVICE_UNAVAILABLE, {
                 "statusCode": 503,
                 "error": "Bad Request",

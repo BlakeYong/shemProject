@@ -6,12 +6,16 @@ from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from src.service.Transcribe import transcribe
 from src.service.Polly import polly
-from src import manageAI
+from src import manageAI, manageDirection
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Header, Form, APIRouter
+from shem_configs import shem_configs
+import requests
+import xml.etree.ElementTree as ET
 
 router = APIRouter()
 AIstore = manageAI
+Direction = manageDirection
 
 @router.post("/transcribe")
 def exportVoiceToText(response: Response, file: bytes = File(...), filename: str = Form(...), apptoken: str = Form(...)):
@@ -40,3 +44,13 @@ async def exportTextToVoice(response: Response, pollyObject : PollyObject):
 def faceDetect(response: Response, file : bytes = File(...), filename : str = Form(...), token: str = Form(...)):
     response.status_code, result = AIstore.AiStore().DetectFace(file, filename, token)
     return result
+
+class PointObject(BaseModel):
+    origin : str
+    destination : str
+
+@router.post("/directions")
+def directions(response: Response,pointObject : PointObject):
+    result = Direction.ManageDirection().find_direction(pointObject.origin,pointObject.destination)
+    return result
+    

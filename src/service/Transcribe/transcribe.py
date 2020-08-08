@@ -47,7 +47,7 @@ class Transcribe:
                 Transcribe.start_transcription_job(TranscriptionJobName=job_name, Media={'MediaFileUri': job_uri}, MediaFormat=filename.split('.')[-1], LanguageCode='ko-KR') #ko-KR   en-US
             except:
                 print(traceback.format_exc())
-                Util.error_message(traceback.format_exc())
+                Util.send_message(traceback.format_exc())
                 try:
                     Transcribe.delete_transcription_job(TranscriptionJobName=job_name)
                 except:

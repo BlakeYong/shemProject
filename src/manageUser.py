@@ -5,6 +5,7 @@ import uuid
 import datetime
 import jwt
 import peewee
+import pymysql
 
 
 from starlette.status import HTTP_200_OK
@@ -47,7 +48,7 @@ class ManageUser:
                 "error": "Bad Request",
                 "message": "비밀번호가 양식에 맞지 않습니다. 다시 시도하여 주시길 바랍니다."
             }
-
+ 
         if len(re.findall("[a-z]", userInfo["password"])) == 0 or len(re.findall("[0-9]", userInfo["password"])) == 0 or len(re.findall("[!@#$%^&+=]",userInfo["password"])) == 0:
             return HTTP_500_INTERNAL_SERVER_ERROR, {
                 "statusCode": 500,
@@ -59,12 +60,8 @@ class ManageUser:
             userInfo["password"].encode(), salt)
         try:
             userInfoRaw = self.dbClass.createUser(userInfo)  # 나중에 db 구축 이후
-            userInfo = userInfoRaw.__dict__[
-                '__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
-            userInfo = userInfoRaw
-            print(userInfo)
-        except Exception as e:
-            print(e)
+            userInfo = userInfoRaw.__dict__['__data__']  # db 구축후 불러오면 딕셔너리로 변환하기
+        except:
             print(traceback.format_exc())
             return HTTP_400_BAD_REQUEST, {
                 "statusCode": 400,
@@ -73,6 +70,7 @@ class ManageUser:
                 #"message": "이미 가입된 이메일입니다."
             }
             pass
+        utilClass.send_message()
         return HTTP_201_CREATED, userInfo
 
     def loginUser(self, userLoginInfo):
@@ -98,8 +96,7 @@ class ManageUser:
                     'token': token
                 })
                 userInfo['jwt'] = token
-            from pprint import pprint
-            pprint(userInfo)
+                userInfo['user']["token"] = token
 
             # if userInfo['user']['confirmed'] and not userInfo['user']['isDeleteRequested']:
             #     return HTTP_200_OK, userInfo
@@ -113,6 +110,7 @@ class ManageUser:
             #         "status_code": 400,
             #         "message": "Email verification is not confirmed."
             #     }
+            utilClass.send_message(f"로그인 유저 정보\n===============\nid : {userInfo['user']['id']} | email : {userInfo['user']['email']} | username : {userInfo['user']['username']}\n===============", "log")
         return HTTP_200_OK, userInfo
 
 

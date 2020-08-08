@@ -28,7 +28,30 @@ class HardwareTable(MySQLModel):
     class Meta:
         db_table = 'HardwareTable'
     id = pw.IntegerField()
+    userId = pw.IntegerField()
+    hardwareId = pw.IntegerField()
     value = pw.FloatField()
+    createDateTime = pw.DateTimeField()
+
+class ChildrenHardwareTable(MySQLModel):
+
+    class Meta:
+        db_table = 'childrenHardwareInfo'
+    id = pw.IntegerField()
+    hardwareName = pw.CharField()
+    parentsHardwareId = pw.IntegerField()
+    userId = pw.IntegerField()
+    createDateTime = pw.DateTimeField()
+
+class ParentsHardwareTable(MySQLModel):
+
+    class Meta:
+        db_table = 'parentsTable'
+    id = pw.IntegerField()
+    hardwareName = pw.CharField()
+    childrenId = pw.CharField()
+    userId = pw.IntegerField()
+    createDateTime = pw.DateTimeField()
 
 class HouseTable(MySQLModel):
     class Meta:
@@ -48,38 +71,25 @@ class UsersTable(MySQLModel):
     id = pw.IntegerField()
     username = pw.CharField()
     email = pw.CharField()
-    nickname = pw.CharField()
     password = pw.CharField()
     resetPasswordToken = pw.CharField()
     confirmed = pw.IntegerField()
-    name = pw.CharField()
-    resetPasswordRequestDatetime = pw.DateTimeField()
-    resetPasswordVerifyLink = pw.CharField()
-    resetPasswordVerifyTokenID = pw.CharField()
-    emailVerifyRequestDatetime = pw.CharField()
-    emailVerifyDatetime = pw.CharField()
-    emailVerifyTokenID = pw.CharField()
-    emailVerifyLink = pw.CharField()
-    emailChangeValue = pw.CharField()
-    emailChangeRequestDatetime = pw.CharField()
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
-    emailVerifiedYN = pw.CharField()
-    emailTokenCode = pw.CharField()
     token = pw.TextField()
     gender = pw.CharField()
     birth = pw.DateField
     appTokenCode = pw.CharField()
     appTokenCodeUpdatedAt = pw.DateTimeField()
     address = pw.CharField()
-    isDeleteRequested = pw.IntegerField
+    isDeleted = pw.BooleanField()
 
 
 class LinkedHouseAndHardware(MySQLModel):
     class Meta:
         db_table = 'LinkedHouseAndHardware'
     id = pw.IntegerField()
-    houseId = pw.ForeignKeyField(HouseTable, to_field='id')
+    houseId = pw.ForeignKeyField(houseTable, to_field='id')
     hardwareId = pw.ForeignKeyField(HardwareTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
@@ -89,7 +99,7 @@ class LinkedUserAndHouse(MySQLModel):
     class Meta:
         db_table = 'LinkedUserAndHouse'
     id = pw.IntegerField()
-    houseId = pw.ForeignKeyField(HouseTable, to_field='id')
+    houseId = pw.ForeignKeyField(houseTable, to_field='id')
     userId = pw.ForeignKeyField(UsersTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()

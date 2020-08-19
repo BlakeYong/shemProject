@@ -3,8 +3,8 @@ import urllib
 import ssl
 import json
 # from googletrans import Translator
-from src.util import Util
-from shem_configs import shem_configs
+from src.utils.util import Util
+from shem_configs import Config
 
 
 class ManageDirection:
@@ -15,7 +15,7 @@ class ManageDirection:
             origin_url = quote(origin)
             destination_url = quote(destination)
 
-            url = "{0}origin={1}&destination={2}&mode=transit&departure_time=now&key={3}".format(shem_configs["google_maps_url"],origin_url,destination_url,shem_configs['google_maps_key'])
+            url = "{0}origin={1}&destination={2}&mode=transit&departure_time=now&key={3}".format(Config["google_maps_url"],origin_url,destination_url,Config['google_maps_key'])
         
             request         = urllib.request.Request(url)
             context         = ssl._create_unverified_context()

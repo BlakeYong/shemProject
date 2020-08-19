@@ -9,7 +9,7 @@ from src.service.Polly import polly
 from src import manageAI, manageDirection
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Header, Form, APIRouter
-from shem_configs import shem_configs
+from shem_configs import Config
 import requests
 import xml.etree.ElementTree as ET
 

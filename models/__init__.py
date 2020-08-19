@@ -2,14 +2,14 @@ import json
 
 import peewee as pw
 import sys
-from src.util import Util
-from shem_configs import shem_configs
+from src.utils.util import Util
+from shem_configs import Config
 from playhouse.pool import PooledMySQLDatabase
 
 utilClass = Util()
 
-shemdb = pw.MySQLDatabase(shem_configs['prod_db_schema'], host=shem_configs['prod_db_host'], port=3306,
-                          user=shem_configs['prod_db_user'], passwd=shem_configs['prod_db_passwd'])
+shemdb = pw.MySQLDatabase(Config.prod_db_schema, host=Config.prod_db_host, port=3306,
+                          user=Config.prod_db_user, passwd=Config.prod_db_passwd)
 
 class JSONField(pw.TextField):
     def db_value(self, value):

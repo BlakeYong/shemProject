@@ -15,7 +15,7 @@ from starlette.status import HTTP_403_FORBIDDEN
 from starlette.status import HTTP_423_LOCKED
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlette.status import HTTP_507_INSUFFICIENT_STORAGE
-from src.util import Util
+from src.utils.util import Util
 from models.helper import Helper
 import requests
 import json

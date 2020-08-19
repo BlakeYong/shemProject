@@ -3,7 +3,7 @@ from starlette.responses import Response, HTMLResponse
 from typing import List, Dict
 from fastapi import WebSocket, APIRouter,WebSocketDisconnect
 from src import manageTripMode
-from src.ConnectionManager import ConnectionManager
+from src.utils.ConnectionManager import ConnectionManager
 import time, pickle, asyncio
 router = APIRouter()
 
@@ -32,4 +32,4 @@ async def db_monitor(websocket:WebSocket, client_id:int):
         except WebSocketDisconnect:
             manager.disconnect(websocket)
             print(f'Client #{client_id} left the chat')
-        await asyncio.sleep(5)
+        await asyncio.sleep(5) # 5초마다 확인 (비동기로)

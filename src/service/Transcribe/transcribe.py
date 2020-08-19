@@ -2,7 +2,7 @@ from starlette.responses import FileResponse, StreamingResponse, JSONResponse
 # from fastai.vision import *
 import random
 from models.helper import Helper
-from src.util import Util
+from src.utils.util import Util
 import ast
 import traceback
 import time
@@ -14,8 +14,7 @@ import boto3
 import urllib
 import urllib.request
 import json
-from src.util import Util
-from shem_configs import shem_configs
+from shem_configs import Config
 
 
 class Transcribe:
@@ -35,11 +34,11 @@ class Transcribe:
         #         "message": "허용되지 않은 토큰 값입니다."
         #     }  => 차후 유저 인증부분 구현
 
-        s3 = boto3.client('s3', aws_access_key_id=shem_configs['aws_access_key_id'], aws_secret_access_key=shem_configs['aws_secret_access_key'], region_name='ap-southeast-1')
+        s3 = boto3.client('s3', aws_access_key_id=Config['aws_access_key_id'], aws_secret_access_key=Config['aws_secret_access_key'], region_name='ap-southeast-1')
         s3.upload_file(f'temp/{filename}', 'assetdslab' , f'transcribe/{filename}')
         job_uri = f'https://assetdslab.s3.ap-northeast-1.amazonaws.com/transcribe/{filename}'
 
-        Transcribe = boto3.client('transcribe', aws_access_key_id=shem_configs['aws_access_key_id'], aws_secret_access_key=shem_configs['aws_secret_access_key'], region_name='ap-southeast-1')
+        Transcribe = boto3.client('transcribe', aws_access_key_id=Config['aws_access_key_id'], aws_secret_access_key=Config['aws_secret_access_key'], region_name='ap-southeast-1')
 
         try:
             try:

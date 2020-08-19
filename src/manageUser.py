@@ -19,11 +19,11 @@ from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlette.status import HTTP_507_INSUFFICIENT_STORAGE
 from models.helper import *
 
-from src.util import Util
+from src.utils.util import Util
+from shem_configs import Config
 
 class ManageUser:
-    def __init__(self): 
-        Util.createTables(UsersTable) # 테이블 자동생성
+    def __init__(self):
         
         self.dbClass = Helper()
         self.invaildUserAuthResponse = {
@@ -70,7 +70,7 @@ class ManageUser:
                 #"message": "이미 가입된 이메일입니다."
             }
             pass
-        utilClass.send_message()
+        utilClass.send_message('register')
         return HTTP_201_CREATED, userInfo
 
     def loginUser(self, userLoginInfo):
@@ -91,7 +91,7 @@ class ManageUser:
             userInfo['jwt'] = userInfo['user']["token"]
             if not userInfo['user']["token"]:
                 token = jwt.encode(
-                    {'email': userInfo['user']["email"]}, 'aiShemwayswinning', algorithm='HS256')
+                    {'email': userInfo['user']["email"]},key=Config['JWT_SECRET_KEY'], algorithm=Config['JWT_ALGORITHM'])
                 self.dbClass.updateUser(userInfo['user']["id"], {
                     'token': token
                 })
@@ -112,5 +112,3 @@ class ManageUser:
             #     }
             utilClass.send_message(f"로그인 유저 정보\n===============\nid : {userInfo['user']['id']} | email : {userInfo['user']['email']} | username : {userInfo['user']['username']}\n===============", "log")
         return HTTP_200_OK, userInfo
-
-

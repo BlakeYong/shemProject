@@ -15,3 +15,5 @@ class Util:
         embed = DiscordEmbed(title=method, description=str(text), color=242424)
         webhook.add_embed(embed)
         response = webhook.execute()
+
+    

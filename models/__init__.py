@@ -89,7 +89,7 @@ class LinkedHouseAndHardware(MySQLModel):
     class Meta:
         db_table = 'LinkedHouseAndHardware'
     id = pw.IntegerField()
-    houseId = pw.ForeignKeyField(houseTable, to_field='id')
+    houseId = pw.ForeignKeyField(HouseTable, to_field='id')
     hardwareId = pw.ForeignKeyField(HardwareTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()
@@ -99,7 +99,7 @@ class LinkedUserAndHouse(MySQLModel):
     class Meta:
         db_table = 'LinkedUserAndHouse'
     id = pw.IntegerField()
-    houseId = pw.ForeignKeyField(houseTable, to_field='id')
+    houseId = pw.ForeignKeyField(HouseTable, to_field='id')
     userId = pw.ForeignKeyField(UsersTable, to_field='id')
     created_at = pw.DateTimeField()
     updated_at = pw.DateTimeField()

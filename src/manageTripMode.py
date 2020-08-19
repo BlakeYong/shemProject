@@ -4,7 +4,9 @@ from starlette.status import HTTP_200_OK
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 from starlette.status import HTTP_404_NOT_FOUND
 from models.helper import *
-
+from fastapi import WebSocket
+import typing
+from .ConnectionManager import ConnectionManager
 class ManageTripMode:
 
     # __init__ 에는 에러, db 설정 해줌
@@ -41,5 +43,5 @@ class ManageTripMode:
             }
             print(e)
             return HTTP_500_INTERNAL_SERVER_ERROR ,message
-            
-        return HTTP_200_OK, result
+        return HTTP_200_OK, result, int(tripModeInfo['houseId'])
+    

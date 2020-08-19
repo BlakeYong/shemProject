@@ -1,4 +1,5 @@
 import datetime
+import uvicorn
 from fastapi import FastAPI
 from routers import airouter
 from starlette.middleware.cors import CORSMiddleware
@@ -42,12 +43,8 @@ def register(userInfo: UserInfo, response: Response):
         userInfo.birth = datetime.datetime.strptime(userInfo.birth, "%Y-%m-%d")
 
     response.status_code, result = manageUser.ManageUser().registerUser(userInfo)
-<<<<<<< HEAD
     
     UsersTable._meta.auto_increment = True
-=======
-
->>>>>>> 6ba9e87736c92b823e2f1032596484e39d1494d2
     return result
 
 class UserLoginInfo(BaseModel):
@@ -60,3 +57,7 @@ def login(userLoginInfo: UserLoginInfo, response: Response):
     response.status_code, result = manageUser.ManageUser().loginUser(userLoginInfo)
 
     return result
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=2052)

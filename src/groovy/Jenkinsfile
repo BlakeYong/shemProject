@@ -1,0 +1,154 @@
+def useTest = true
+def useBuild = true
+def useDeploy = true
+def useSwitch = false
+
+def useNode = true
+def useSlack = true
+
+stage("Flow Check", {
+    try {
+        println "  TEST FLOW = $USE_TEST"
+        useTest = "$USE_TEST" == "true"
+    }
+    catch (MissingPropertyException e) {
+        println "  TEST FLOW = true"
+    }
+
+    try {
+        println "  BUILD FLOW = $USE_BUILD"
+        useBuild = "$USE_BUILD" == "true"
+    }
+    catch (MissingPropertyException e) {
+        println "  BUILD FLOW = true"
+    }
+
+    try {
+        println "  DEPLOY FLOW = $USE_DEPLOY"
+        useBuild = "$USE_DEPLOY" == "true"
+    }
+    catch (MissingPropertyException e) {
+        println "  BUILD DEPLOY = true"
+    }
+
+    try {
+        println "  SWITCH FLOW = $USE_SWITCH"
+        useBuild = "$USE_SWITCH" == "true"
+    }
+    catch (MissingPropertyException e) {
+        println "  SWITCH FLOW = true"
+    }
+})
+
+stage("Parameter Check", {
+    println " BUILD_USER = " + BUILD_USER
+    println " CONFIG_NAME = $CONFIG_NAME"
+    println " REMOTE_PATH = $REMOTE_PATH"
+    println " TARGET_USER = $TARGET_USER"
+    println " TARGET_SERVER = $TARGET_SERVER"
+    println " GIT_URL = $GIT_URL"
+    println " BRANCH_SELECTOR = $BRANCH_SELECTOR"
+    println " GRADLE_VERSION = $GRADLE_VERSION"
+    println " JAVA_VERSION = $JAVA_VERSION"
+
+    env.JAVA_HOME="${tool name : JAVA_VERSION}"
+    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+
+    try {
+        println " SLACK_TOKEN = $SLACK_TOKEN"
+    }
+    catch (MissingPropertyException e) {
+        useSlack = false
+    } try {
+        println " NODE_VERSION = $NODE_VERSION"
+    } catch (MissingPropertyException e) {
+        useNode = false
+    }
+})
+
+
+stage("Git CheckOut", {
+    if (useTest || useBuild) {
+        println "Git CheckOut Started"
+        checkout(
+            [ $class : 'GitSCM',
+            branches : [[name: '${BRANCH_SELECTOR}']],
+            doGenerateSubmoduleConfigurations: false,
+            extensions : [],
+            submoduleCfg : [],
+            userRemoteConfigs :
+            [[url: '${GIT_URL']]
+            ]
+        )
+        println "Git CheckOut End"
+    } else {
+    println "Git CheckOut Skip"
+    }
+})
+
+stage('Test') {
+    if (useTest) {
+        println "Test Started"
+        try {
+            sh "${tool name: GRADLE_VERSION, type: 'hudson.plugins.gradle.GradleInstallation'}/bin/gradle test -Dorg.gradle.daemon=true"
+        } finally {
+            junit allowEmptyResults: true, keepLongStdio: true, testResults: 'build/test-results/*.xml'
+        } println "Test End"
+    } else {
+    println "Test Skip"
+    }
+}
+
+stage("Deploy", {
+    if(useDeploy) {
+        println "Deploy Started"
+        sh "****"
+        println "Deploy End"
+    } else {
+        println "Deploy Skip"
+    }
+})
+
+
+if (useNode) {
+    nvm('version' : "${NODE_VERSION}") {
+        stage('Test') {
+            if (useTest) {
+                println "Test Started"
+                ~~
+                println "Test End"
+            } else {
+                println "Test Skip"
+            }
+        }
+        stage("Build", {
+            if(useBuild) {
+                println "Build Started"
+                ~~
+                println "Build End"
+            } else {
+                println "Build Skip"
+            }
+        })
+    }
+} else {
+    stage('Test') {
+        if (useTest) {
+            println "Test Started"
+            ~~
+            println "Test End"
+        } else {
+            println "Test Skip"
+        }
+    } stage("Build", {
+        if(useBuild) {
+            println "Build Started"
+            ~~
+            println "Build End"
+        } else {
+            println "Build Skip"
+        }
+    })
+}
+
+

@@ -31,5 +31,5 @@ async def db_monitor(websocket:WebSocket, client_id:int):
                 manager.is_updated[client_id] = False
         except WebSocketDisconnect:
             manager.disconnect(websocket)
-            print(f'Client #{client_id} left the chat')
+            print(f'Client #{client_id} left the session')
         await asyncio.sleep(5) # 5초마다 확인 (비동기로)
